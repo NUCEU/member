@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8" />
+    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>CRUD</title>
+  </head>
+  <body>
+    <!-- 데이터를 보낼때 post 로 보내는 방법 2가지 -->
+    <!-- ajax, form 
+    form 태그 안에 있는 버튼을 누르는 순간 액션에 정의된대로 날아간다.
+     form method 안쓰면 디폴트는 겟(주소창에 뜨고, 보안불가) 
+    -->
+    <form action="/add" method="POST">
+      <input type="text" name="subject" id="subject" />
+      <textarea name="contents" id="contents" cols="30" rows="10"></textarea>
+      <button>send</button>
+    </form>
+    <script>
+      // $.ajax({url:"/add",method:"post"});
+    </script>
+  </body>
+</html>
