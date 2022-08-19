@@ -1,0 +1,30 @@
+<%- include("include/header") %>
+<header id="header">
+  <h1 id="logo">MEMBER</h1>
+</header>
+<main id="main">
+  <div id="contents">
+    <h2 class="title">로그인</h2>
+
+    <hr />
+    <form action="/register" method="POST">
+      <!-- 메서드는 겟 아니면 포스트 두개만 쓸수있고 겟하면 주소창에 다뜸, 폼태그에 있는 버튼을 누르면 무조건 액션으로 감 -->
+      <div class="inputBox">
+        <label>
+          <span>ID</span>
+          <input type="text" id="userID" name="userID" placeholder="ID를 입력하세요" />
+        </label>
+      </div>
+      <div class="inputBox">
+        <label>
+          <span>Password</span>
+          <input type="password" id="userPW" name="userPW" placeholder="password를 입력하세요" />
+        </label>
+      </div>
+      <button tupe="submit">로그인</button>
+      <button type="reset">취소</button>
+      <!-- 기본값이 submit , reset 하면 데이터로  날아가지않음  -->
+    </form>
+  </div>
+</main>
+<%- include("include/footer") %>

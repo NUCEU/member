@@ -1,0 +1,7 @@
+#header { color: #111; background-color: #ccc; }
+
+#mainVisual .slogan { position: absolute; top: 50%; -webkit-transform: translateY(-50%); transform: translateY(-50%); text-shadow: 1px 1px 0px black,2px 2px 0px black,3px 3px 0px black,4px 4px 0px black,5px 5px 0px black,6px 6px 0px black,7px 7px 0px black,8px 8px 0px black,9px 9px 0px black,10px 10px 0px black,11px 11px 0px black,12px 12px 0px black,13px 13px 0px black,14px 14px 0px black,15px 15px 0px black,16px 16px 0px black,17px 17px 0px black,18px 18px 0px black,20px 20px 0px black; }
+
+#news ul li h3 { overflow: hidden; white-space: nowrap; text-overflow: ellipsis; }
+
+#news ul li .desc { display: -webkit-box; height: 2.4em; overflow: hidden; line-height: 1.2; -webkit-line-clamp: 2; /* autoprefixer: off */ -webkit-box-orient: vertical; word-break: break-all; }

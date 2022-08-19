@@ -1,110 +1,126 @@
-const path = require('path'); //node에 자동으로 들어간거라 설치안함
 const express = require('express');
 const app = express();
 const dotenv = require('dotenv').config();
-//mongodb 관련 모듈
+const path = require('path');
 const MongoClient = require('mongodb').MongoClient;
-
 let db = null;
+
 MongoClient.connect(process.env.MONGO_URL, { useUnifiedTopology: true }, (err, client) => {
-  console.log('연결');
   if (err) {
     console.log(err);
   }
   db = client.db('crudapp');
 });
 
-app.use(express.urlencoded({ extended: false })); //express에서 제공, post로 날아온 방식은 꼭 이걸써야 바디에서 받음 true나 false나 별차이없음
-app.set('view engine', 'ejs'); //ejs는 views 폴더안에 있어야 동작한다.
-app.get('/', (req, res) => {
-  //res.send('hello node ya');
-  res.render('index');
-});
-//req, res 정의 다시.
-//page를 건네주어야 한다. ../ 이게 아닌 절대경로로.
-//리눅스경로를 알아야 할 필요가 있다. 경로에 중요한게 path
-//원래는 폴더경로 + \ 로 바꿔줘야하나 이렇게쓴다
-//__dirnam은 현재 내가 사용하고 있는 폴더까지의 경로다.
-app.get('/write', (req, res) => {
-  //res.sendFile(path.join(__dirname, 'public/html/write.html'));
-  res.render('write');
-});
-app.post('/add', (req, res) => {
-  db.collection('counter').findOne({ name: 'total' }, (err, result) => {
-    const total = result.totalPost;
-    //console.log('write에서 post로 보낸 data 받는곳'); //send까지 해야한다
-    //데이터는 어떻게 받느냐. 폼태그의 name에 있는 값을 받는거다
-    const subject = req.body.subject;
-    const contents = req.body.contents;
-    console.log(subject);
-    console.log(contents);
-    // insert delete update select 원래는 이렇게 sql로 써야하는데 몽고db에서는 메서드형태도 제공한다.
-    const insertData = {
-      no: total + 1,
-      subject: subject,
-      contents: contents,
-    };
-    db.collection('crud').insertOne(insertData, (err, result) => {
-      db.collection('counter').updateOne({ name: 'total' }, { $inc: { totalPost: 1 } }, (err, result) => {
-        if (err) {
-          console.log(err);
-        }
-        res.send(`<script>alert("글이 입력되었습니다."); location.href="/list"</script>`);
-      });
-    });
-  });
-});
-//$inc 하면 값을 1증가 시켜준다 이건 몽고디비에서 제공하는 함수다.
+app.set('port', process.env.PORT || 8099);
+const PORT = app.get('port');
 
-//1. db접속
-//2. 데이터 밀어넣기
-//res.send('잘도착했어요');
-//res.sendFile(path.join(__dirname, 'public/result.html'));
-//alert("글이 입력되었습니다.") 이건 안됨 노드라서(노드에는 브라우저가 없음 alert는 브라우저에서 쓰는 스크립트는가능)
-//res는 한번만 된다. 아래거는 인식 x
-//res.send가 html보내는거다
-//res.redirect('/list');
-//몽고디비는 해시태그로 데이터가 쌓이며 인덱싱기능이 없다. 순서정하기가 용이하지 않다
-//포스트는 보낼때, get은 받은값을 뿌릴때. db에 밀어넣는거는 오브젝트로만 넣어야함
-app.get('/list', (req, res) => {
-  //crud에서 데이터 받아보기
-  db.collection('crud')
-    .find()
-    .toArray((err, result) => {
-      //toArray() 배열로 돌려줌
-      console.log(result); //서버사이드 랜더링 ?
-      //res.send(), res.sendFile(), res.json(result); // front가 알아서 처리해서 가져다 쓰기 (백엔드쪽에서 편한방법)
-      res.render('list', { list: result, title: 'test용입니다.' }); // 페이지 내가 만들어서보내주기
-    });
+app.set('view engine', 'ejs');
+app.use(express.urlencoded({ extended: false }));
+app.use(express.static(path.join(__dirname, '/public')));
+
+app.get('/', (req, res) => {
+  res.render('index', { title: 'main' });
 });
-// app.get('/detail/id: detail', (req, res) => {
-//   console.log(req.query.id);
-//   res.render('detail');
-// });
-app.get('/detail/:no', (req, res) => {
-  console.log(req.params.no);
-  const no = parseInt(req.params.no); //get으로 넘어오면 문자처리되어서 다시 넘버(정수)로 바꿔줘야 비교가 된다
-  db.collection('crud').findOne({ no: no }, (err, result) => {
+app.get('/join', (req, res) => {
+  res.render('join'); //보여주는 페이지기 때문 sendFlie 안했고 ejs사용하기위해 ejs-setting
+});
+app.get('/register', (req, res) => {
+  res.send(`아이디는 ${req.body.userID} == 패스워드는 ${req.body.userPW}`);
+});
+app.get('/success', (req, res) => {
+  res.render('registerSuccess');
+});
+app.get('/login', (req, res) => {
+  res.render('login');
+});
+app.post('/login', (req, res) => {
+  const userID = req.body.userID;
+  const userPW = req.body.userPW;
+
+  //여기에 db에 가서 member collection에 가서 id pw 비교해서 있으면 로그인 되었다고 처리
+  db.collection('member').findOne({ userID: userID, userPW: userPW }, (err, result) => {
     if (err) {
       console.log(err);
     }
-    if (result) {
-      console.log(result);
-      res.render('detail', { subject: result.subject, contents: result.contents });
+    if (result !== null) {
+      res.send(userID + '===' + userPW);
+    } else {
+      res.send(`<script>alert("아이디 비밀번호 확인해주세요"); history.back()</script>`);
+      //history.back() 하면 post.login 에서 get.login으로 간다.
+    }
+    console.log(result);
+    res.send(userID + '===' + userPW);
+  });
+});
+app.post('/register', (req, res) => {
+  const userID = req.body.userID;
+  const userPW = req.body.userPW;
+  const userName = req.body.userName;
+  const userEmail = req.body.userEmail;
+  const userZipcode = req.body.Zipcode;
+  const userAddress = req.body.address01 + ' / ' + req.body.address02;
+  const userGender = req.body.gender;
+  const userJob = req.body.job;
+
+  console.log(userID);
+  console.log(userPW);
+  console.log(userName);
+  console.log(userEmail);
+  console.log(userZipcode);
+  console.log(userAddress);
+  console.log(userGender);
+  console.log(userJob);
+
+  const insertData = {
+    userID: userID,
+    userPW: userPW,
+    userName: userName,
+    userEmail: userEmail,
+    userZipcode: userZipcode,
+    userAddress: userAddress,
+    userGender: userGender,
+    userJob: userJob,
+  };
+
+  db.collection('member').insertOne(insertData, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.send(`<script>alert("알 수 없는 오류로 회원가입이 되지 않았습니다. 잠시 후 다시 가입해주세요"); location.href="/"</script>`);
+    }
+    //res.redirect('/login');
+    //res.send(`<script>alert("회원가입이 잘되었지요");location.href="/login"</script>`);
+    res.render('registerSuccess', { title: 'success' });
+  });
+  //res.send(`아이디는 ${req.body.userID} == 패스워드는 ${req.body.userPW}`);
+});
+app.post('/registerAjax', (req, res) => {
+  const userID = req.body.userID;
+  const userPW = req.body.userPW;
+  console.log(userID);
+  console.log(userPW);
+  db.collection('member').insertOne({ userID: userID, userPW: userPW }, (err, result) => {
+    if (err) {
+      console.log(err);
+      res.send(`<script>alert("알 수 없는 오류로 회원가입이 되지 않았습니다. 잠시후 다시 가입해 주세요"); location.href="/"</script>`);
+    }
+    res.json({ isJoin: true });
+  });
+  //res.send(`아이디는 ${req.body.userID}==패스워드는 ${req.body.userPW}`);
+});
+
+app.post('/idCheck', (req, res) => {
+  const userID = req.body.userID;
+  db.collection('member').findOne({ userID: userID }, (err, result) => {
+    //console.log(result);
+    if (result === null) {
+      res.json({ isOk: true });
+    } else {
+      res.json({ isOk: false });
     }
   });
-  //res.render('detail');
 });
 
-//port는 서버를 빌리는 곳에서 지정해주는 포트를 써야한다
-app.listen(8099, () => {
-  console.log('8099에서 서버 대기중');
+app.listen(PORT, () => {
+  console.log(`${PORT}에서 서버 대기중`);
 });
-
-//네이버에서 값을 받아올때는 무조건 포스트로 날려야한다
-//주소창에서는 못날리니깐 반드시
-//get방식으로 받는방법 query , params
-// ? 로 보내는 방법 -> req.query.aaa
-// params는 : 으로 받음
-
-//post는 무조건 바디로 받는다. req.body.subject(html의 name 값이다 )

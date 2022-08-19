@@ -1,20 +1,8 @@
-<!DOCTYPE html>
-<html lang="en">
-  <head>
-    <meta charset="UTF-8" />
-    <meta http-equiv="X-UA-Compatible" content="IE=edge" />
-    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
-    <title>Document</title>
-  </head>
-  <body>
-    <h1>반갑습니당</h1>
-    <h2>ejs index 에요</h2>
+<%- include("include/header") %>
+<h1>MEMBER</h1>
+<div id="contents">
+  <a href="/join">회원가입</a>
+  <a href="/login">로그인</a>
+</div>
 
-    <a href="/write">글쓰기</a>
-    <a href="/list">목록</a>
-
-    <script>
-      // $.ajax({url:"/add",method:"post"});
-    </script>
-  </body>
-</html>
+<%- include("include/footer") %>

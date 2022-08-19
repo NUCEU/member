@@ -1,0 +1,39 @@
+body { font-family: "Roboto", "Noto Sans KR", sans-serif; font-size: 16px; color: #111; }
+
+a { color: inherit; text-decoration: none; }
+
+.container { width: 1200px; margin: 0 auto; }
+
+#header { position: absolute; width: 100%; z-index: 99; color: #fff; }
+
+#header:after { display: block; position: absolute; content: ""; width: 100%; height: 1px; background-color: #fff; top: 100px; pointer-events: none; }
+
+#header .container { max-width: 1920px; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-pack: center; -ms-flex-pack: center; justify-content: center; }
+
+#header #logo { position: absolute; left: 50px; top: 0; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-align: center; -ms-flex-align: center; align-items: center; height: 100px; }
+
+#header .online { position: absolute; top: 20px; right: 50px; height: 60px; -webkit-box-sizing: border-box; box-sizing: border-box; display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-align: center; -ms-flex-align: center; align-items: center; padding: 0 30px; border-radius: 100px; border: 2px solid #fff; }
+
+#header #gnb:hover:before { display: block; }
+
+#header #gnb:before { display: block; position: absolute; content: ""; width: 100%; height: 96px; background-color: #bf0c14; top: 100px; left: 0; display: none; }
+
+#header #gnb .list { display: -webkit-box; display: -ms-flexbox; display: flex; }
+
+#header #gnb .list > li { position: relative; }
+
+#header #gnb .list > li:hover .depth01 { background-color: #bf0c14; }
+
+#header #gnb .list > li:hover .depth01:after { -webkit-transform: scaleX(1); transform: scaleX(1); }
+
+#header #gnb .list > li:hover .depth02 { display: -webkit-box; display: -ms-flexbox; display: flex; }
+
+#header #gnb .list > li .depth01 { display: -webkit-box; display: -ms-flexbox; display: flex; -webkit-box-align: center; -ms-flex-align: center; align-items: center; height: 100px; padding: 0 50px; font-size: 20px; font-weight: 500; position: relative; }
+
+#header #gnb .list > li .depth01:after { display: block; position: absolute; content: ""; height: 2px; left: 20px; right: 20px; bottom: 0; background-color: #fff; -webkit-transform: scaleX(0); transform: scaleX(0); -webkit-transition: -webkit-transform 0.25s ease-in-out; transition: -webkit-transform 0.25s ease-in-out; transition: transform 0.25s ease-in-out; transition: transform 0.25s ease-in-out, -webkit-transform 0.25s ease-in-out; }
+
+#header #gnb .list > li .depth02 { padding: 30px 10px; color: #fff; border-radius: 0 0 10px 10px; display: none; position: absolute; left: 0; width: 600px; }
+
+#header #gnb .list > li .depth02 li { margin: 0 10px; }
+
+#header #gnb .list > li .depth02 li a { display: block; padding: 10px 0; }
